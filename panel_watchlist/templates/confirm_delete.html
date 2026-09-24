@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Delete {{ show.title }} &middot; Panel Watchlist{% endblock %}
+{% block content %}
+<section class="panel form-panel">
+  <h1 class="panel-title">Delete “{{ show.title }}”?</h1>
+  <p class="caption-box">This rips the panel out of the book. Your progress ({{ show.watched_episodes }} episodes) and notes go with it.</p>
+  <form method="post" class="form-actions">
+    <button class="btn btn-ink" type="submit">Yes, delete it</button>
+    <a href="{{ url_for('watchlist.index') }}">Keep it</a>
+  </form>
+</section>
+{% endblock %}

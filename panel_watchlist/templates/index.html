@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="stats" aria-label="Stats">
+  {% for key, label in status_labels.items() %}
+    <div class="stat">
+      <span class="stat-num" data-stat="{{ key }}">{{ stats.per_status[key] }}</span>
+      <span class="stat-label">{{ label }}</span>
+    </div>
+  {% endfor %}
+  <div class="stat stat-wide">
+    <span class="stat-num" data-stat="episodes">{{ stats.episodes_watched }}</span>
+    <span class="stat-label">Episodes watched</span>
+  </div>
+  <div class="stat stat-wide">
+    <span class="stat-num" data-stat="average">{{ stats.average_rating if stats.average_rating is not none else "–" }}</span>
+    <span class="stat-label">Average rating</span>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Filter by status">
+  <a class="tab" href="{{ url_for('watchlist.index', sort=current_sort) }}"
+     {% if not current_status %}aria-current="page"{% endif %}>All <small>{{ stats.total_shows }}</small></a>
+  {% for key, label in status_labels.items() %}
+    <a class="tab" href="{{ url_for('watchlist.index', status=key, sort=current_sort) }}"
+       {% if current_status == key %}aria-current="page"{% endif %}>{{ label }} <small>{{ stats.per_status[key] }}</small></a>
+  {% endfor %}
+</nav>
+
+<div class="sortbar">
+  <span>Sort:</span>
+  {% for key, (label, _order) in sorts.items() %}
+    <a href="{{ url_for('watchlist.index', status=current_status or None, sort=key) }}"
+       {% if current_sort == key %}aria-current="true"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</div>
+
+{% if shows %}
+<section class="grid">
+  {% for show in shows %}
+    <article class="panel" id="show-{{ show.id }}">
+      <header class="panel-head">
+        <span class="tag">{{ show.status_label }}</span>
+        {% if show.rating is not none %}<span class="rating">{{ show.rating }}<small>/10</small></span>{% endif %}
+      </header>
+      <h2 class="panel-title">{{ show.title }}</h2>
+      {% if show.total_episodes is none %}
+        <div class="progress progress-unknown" title="Total unknown (still airing)"></div>
+      {% else %}
+        <div class="progress" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100"
+             aria-valuenow="{{ show.progress_percent }}">
+          <span style="--p: {{ show.progress_percent }}%"></span>
+        </div>
+      {% endif %}
+      <p class="ep-count">EP <strong>{{ show.watched_episodes }}</strong> / {{ show.total_episodes if show.total_episodes is not none else "??" }}</p>
+      {% if show.notes %}<p class="caption-box">{{ show.notes }}</p>{% endif %}
+      <footer class="panel-actions">
+        {% if show.is_finished %}
+          <span class="stamp">Done!</span>
+        {% else %}
+          <form method="post" action="{{ url_for('watchlist.plus_one', show_id=show.id) }}">
+            <input type="hidden" name="next" value="{{ request.full_path }}">
+            <button class="sfx" type="submit" aria-label="Add one episode to {{ show.title }}">+1 EP!</button>
+          </form>
+        {% endif %}
+        <span class="links">
+          <a href="{{ url_for('watchlist.edit_show', show_id=show.id) }}">Edit</a>
+          <a href="{{ url_for('watchlist.confirm_delete', show_id=show.id) }}">Delete</a>
+        </span>
+      </footer>
+    </article>
+  {% endfor %}
+</section>
+{% else %}
+<section class="panel empty">
+  <h2 class="panel-title">Blank page&hellip;</h2>
+  <p>No shows here yet. <a href="{{ url_for('watchlist.new_show') }}">Add one</a> or run <code>flask --app panel_watchlist seed</code>.</p>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,283 @@
+/* Panel Watchlist: black ink on off-white paper, one red accent. */
+
+/* Offline fallback for the display face: whichever heavy system font exists. */
+@font-face {
+  font-family: "Panel Fallback";
+  src: local("Impact"), local("Arial Black"), local("DejaVu Sans Condensed Bold"),
+       local("DejaVuSansCondensed-Bold"), local("Liberation Sans Narrow Bold");
+}
+
+:root {
+  color-scheme: light;
+  --paper: #f5f0e4;
+  --paper-light: #fffdf7;
+  --ink: #141414;
+  --ink-soft: #3a3a3a;
+  --tone: rgba(20, 20, 20, 0.13);
+  --red: #d8231b;
+  --line: 4px;
+  --shadow: 6px 6px 0 var(--ink);
+  --display: "Bangers", "Panel Fallback", Impact, "Arial Black", sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--paper); }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font: 16px/1.5 var(--body);
+  /* Screentone: two offset dot grids, like a printed halftone. */
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(var(--tone) 1px, transparent 1.4px),
+    radial-gradient(var(--tone) 1px, transparent 1.4px);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+}
+
+a { color: var(--ink); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { text-decoration-style: wavy; }
+:focus-visible { outline: 3px dashed var(--ink); outline-offset: 3px; }
+
+.page { max-width: 1120px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* ---------- Masthead ---------- */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  background: var(--paper-light);
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--shadow);
+  transform: rotate(-0.4deg);
+}
+.logo { text-decoration: none; display: flex; flex-direction: column; }
+.logo-main {
+  font: 400 clamp(2.2rem, 6vw, 3.6rem)/0.95 var(--display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper-light);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--ink);
+}
+.logo-sub { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font: 400 1.25rem/1.2 var(--display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.btn-ink { background: var(--ink); color: var(--paper-light); }
+.btn:active, .sfx:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+
+/* ---------- Speech-bubble flash messages ---------- */
+.bubbles { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; margin: 28px 0 8px 12px; }
+.bubble {
+  position: relative;
+  margin: 0;
+  max-width: 560px;
+  padding: 12px 20px;
+  background: var(--paper-light);
+  border: 3px solid var(--ink);
+  border-radius: 28px;
+  font-weight: 600;
+}
+/* Tail: an ink triangle with a paper triangle on top of it. */
+.bubble::before, .bubble::after {
+  content: "";
+  position: absolute;
+  left: 34px;
+  border-style: solid;
+  border-color: transparent;
+}
+.bubble::before { bottom: -20px; border-width: 20px 18px 0 0; border-top-color: var(--ink); }
+.bubble::after  { bottom: -14px; left: 37px; border-width: 14px 12px 0 0; border-top-color: var(--paper-light); }
+.bubble-error { border-width: 4px; border-radius: 10px; font-weight: 800; }
+.bubble-error::before { border-top-color: var(--ink); }
+
+/* ---------- Stats strip ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 0;
+  margin: 32px 0 20px;
+  background: var(--paper-light);
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--shadow);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 8px;
+  border-right: 2px solid var(--ink);
+  text-align: center;
+}
+.stat:last-child { border-right: 0; }
+.stat-num { font: 400 2.1rem/1 var(--display); letter-spacing: 0.03em; }
+.stat-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+.stat-wide { background: var(--ink); color: var(--paper-light); }
+.stat-wide .stat-label { color: var(--paper); }
+
+/* ---------- Tabs + sort ---------- */
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding: 6px 4px 10px; }
+.tab {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  background: var(--paper-light);
+  border: 3px solid var(--ink);
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.tab small { font-weight: 600; opacity: 0.7; }
+.tab[aria-current="page"] { background: var(--ink); color: var(--paper-light); }
+.sortbar { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 4px 4px 24px; font-size: 0.9rem; font-weight: 600; }
+.sortbar a[aria-current] { font-weight: 800; text-decoration-style: solid; text-decoration-thickness: 3px; }
+.sortbar a:not([aria-current]) { text-decoration: none; }
+
+/* ---------- Panels (cards) ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px 24px; }
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--paper-light);
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--shadow);
+  transform: rotate(var(--tilt, -0.6deg));
+}
+.grid .panel:nth-child(2n) { --tilt: 0.7deg; }
+.grid .panel:nth-child(3n) { --tilt: -0.3deg; }
+.grid .panel:nth-child(5n) { --tilt: 0.4deg; }
+
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tag {
+  padding: 2px 8px;
+  background: var(--ink);
+  color: var(--paper-light);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rating { font: 400 1.5rem/1 var(--display); letter-spacing: 0.04em; }
+.rating small { font-size: 0.9rem; }
+.panel-title { margin: 0; font: 400 1.85rem/1.05 var(--display); letter-spacing: 0.03em; overflow-wrap: anywhere; }
+
+.progress { height: 16px; background: var(--paper-light); border: 3px solid var(--ink); }
+.progress span {
+  display: block;
+  height: 100%;
+  width: var(--p, 0%);
+  background: repeating-linear-gradient(-45deg, var(--red) 0 6px, #b81a13 6px 9px);
+}
+/* Unknown total (still airing): screentone instead of a bar. */
+.progress-unknown {
+  background: radial-gradient(var(--ink) 1px, transparent 1.3px) 0 0 / 5px 5px, var(--paper-light);
+}
+.ep-count { margin: 0; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.04em; }
+.ep-count strong { font: 400 1.35rem/1 var(--display); }
+
+/* Narration box, the rectangular caption used for inner monologue. */
+.caption-box {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.panel-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 4px; }
+.panel-actions form { margin: 0; }
+.links { display: flex; gap: 12px; font-size: 0.9rem; font-weight: 600; }
+
+/* The SFX button: the one place besides progress bars that gets red. */
+.sfx {
+  padding: 6px 14px 4px;
+  font: 400 1.6rem/1 var(--display);
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--red);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  text-shadow: 2px 2px 0 var(--ink);
+  transform: rotate(-4deg) skewX(-6deg);
+  cursor: pointer;
+}
+.stamp {
+  padding: 2px 10px;
+  font: 400 1.5rem/1.1 var(--display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 3px double var(--ink);
+  transform: rotate(-7deg);
+}
+
+.empty { max-width: 560px; }
+
+/* ---------- Forms ---------- */
+.form-panel { max-width: 640px; margin: 32px auto 0; --tilt: -0.3deg; }
+.show-form { display: flex; flex-direction: column; gap: 14px; }
+.show-form label { display: flex; flex-direction: column; gap: 4px; flex: 1; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+.row { display: flex; gap: 14px; }
+input, select, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font: 400 1rem var(--body);
+  color: var(--ink);
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 0;
+}
+textarea { resize: vertical; }
+.form-actions { display: flex; align-items: center; gap: 18px; margin: 4px 0 0; font-weight: 600; }
+
+.colophon { margin-top: 48px; text-align: center; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* ---------- Motion: a small wobble, only when the user allows it ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .grid .panel { transition: transform 0.2s ease; }
+  .grid .panel:hover { transform: rotate(0deg) scale(1.01); }
+  .sfx:hover { animation: wobble 0.35s ease-in-out; }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(-4deg) skewX(-6deg); }
+  33% { transform: rotate(3deg) skewX(-6deg) scale(1.08); }
+  66% { transform: rotate(-7deg) skewX(-6deg) scale(1.04); }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 560px) {
+  .page { padding: 16px 16px 40px; }
+  .masthead { padding: 12px 14px; }
+  /* Six columns: 3 statuses, then 2 statuses, then the two totals. */
+  .stats { grid-template-columns: repeat(6, 1fr); }
+  .stat { grid-column: span 2; padding: 8px 2px; border-bottom: 2px solid var(--ink); }
+  .stat:nth-child(4), .stat:nth-child(5), .stat-wide { grid-column: span 3; }
+  .stat:nth-child(3), .stat:nth-child(5) { border-right: 0; }
+  .stat-wide { border-bottom: 0; }
+  .stat-num { font-size: 1.7rem; }
+  .stat-label { font-size: 0.66rem; letter-spacing: 0.03em; }
+  .grid { grid-template-columns: 1fr; }
+  .row { flex-direction: column; }
+  .panel { transform: rotate(calc(var(--tilt, -0.6deg) / 2)); }
+}

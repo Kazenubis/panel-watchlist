@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit " ~ show.title if show else "New show" }} &middot; Panel Watchlist{% endblock %}
+{% block content %}
+<section class="panel form-panel">
+  <h1 class="panel-title">{{ "Edit “" ~ show.title ~ "”" if show else "New show" }}</h1>
+  <form method="post" class="show-form">
+    <label>Title
+      <input name="title" value="{{ form.get('title', '') }}" maxlength="120" required>
+    </label>
+    <div class="row">
+      <label>Episodes watched
+        <input name="watched_episodes" type="number" min="0" value="{{ form.get('watched_episodes', '') }}" placeholder="0">
+      </label>
+      <label>Total episodes
+        <input name="total_episodes" type="number" min="1" value="{{ form.get('total_episodes', '') }}" placeholder="blank = still airing">
+      </label>
+    </div>
+    <div class="row">
+      <label>Status
+        <select name="status">
+          {% for key, label in status_labels.items() %}
+            <option value="{{ key }}" {% if form.get('status', 'watching') == key %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Rating (1&ndash;10)
+        <input name="rating" type="number" min="1" max="10" value="{{ form.get('rating', '') }}" placeholder="optional">
+      </label>
+    </div>
+    <label>Notes
+      <textarea name="notes" rows="4" maxlength="1000">{{ form.get('notes', '') }}</textarea>
+    </label>
+    <div class="form-actions">
+      <button class="btn btn-ink" type="submit">{{ "Save changes" if show else "Add to watchlist" }}</button>
+      <a href="{{ url_for('watchlist.index') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

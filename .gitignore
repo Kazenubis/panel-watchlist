@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+dist/
+build/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments / secrets
+.env
+.venv/
+venv/
+env/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Runtime data (SQLite database lives in instance/)
+instance/
+*.db
+*.sqlite3
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

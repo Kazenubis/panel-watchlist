@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Panel Watchlist{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <a class="logo" href="{{ url_for('watchlist.index') }}">
+        <span class="logo-main">Panel Watchlist</span>
+        <span class="logo-sub">Vol. 1 &mdash; an anime log in ink</span>
+      </a>
+      <a class="btn btn-ink" href="{{ url_for('watchlist.new_show') }}">+ New show</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="bubbles" role="status">
+          {% for category, message in messages %}
+            <p class="bubble bubble-{{ category }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="colophon">Printed in black ink by Mahmoud (Kazenubis) &middot; Flask + SQLite</footer>
+  </div>
+</body>
+</html>
